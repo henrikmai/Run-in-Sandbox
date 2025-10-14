@@ -83,8 +83,8 @@ if ($Add_HTML -eq $True) {
 Write-Progress -Activity $Progress_Activity -PercentComplete 40
 
 if ($Add_Intunewin -eq $True) {
-    #Add-RegItem -Sub_Reg_Path ".intunewin" -Type "Intunewin"
-    Add-RegItem -Sub_Reg_Path "SystemFileAssociations\.intunewin" -Type "Intunewin"
+    Add-RegItem -Sub_Reg_Path ".intunewin" -Type "Intunewin"
+    #Add-RegItem -Sub_Reg_Path "SystemFileAssociations\.intunewin" -Type "Intunewin"
 }
 Write-Progress -Activity $Progress_Activity -PercentComplete 45
 
@@ -143,45 +143,21 @@ if ($Add_PS1 -eq $True) {
     }
     
     if ($Windows_Version -like "*Windows 11*") {
-				Write-LogMessage -Message_Type "INFO" -Message "Running on Windows 11"
-				
-				$Default_PS1_HKCU = "$HKCU_Classes\.ps1"
-				If (Test-Path $HKCU_Classes) 
-					{
-						$rOpenWithProgids_Key = "$Default_PS1_HKCU\rOpenWithProgids"
-						If (Test-Path $rOpenWithProgids_Key) 
-							{
-								$Get_OpenWithProgids_Default_Value = (Get-Item $rOpenWithProgids_Key).Property
-								ForEach ($Prop in $Get_OpenWithProgids_Default_Value) 
-									{
-										$PS1_Shell_Registry_Key = "$HKCU_Classes\$Prop\Shell"
-										$Main_Menu_Path = "$PS1_Shell_Registry_Key\$PS1_Main_Menu"
-										New-Item -Path $PS1_Shell_Registry_Key -Name $PS1_Main_Menu -Force | Out-Null
-										New-ItemProperty -Path $Main_Menu_Path -Name "subcommands" -PropertyType String | Out-Null
-										New-Item -Path $Main_Menu_Path -Name "Shell" -Force | Out-Null
+        $Registry_Set = $False
+        Write-LogMessage -Message_Type "INFO" -Message "Running on Windows 11"
 
-										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Basic" -Entry_Name "PS1 as user"
-										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1System" -Entry_Name "PS1 as system" 
-										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Params" -Entry_Name "PS1 with parameters"
-									}
-							}
-						$OpenWithProgids_Key = "$Default_PS1_HKCU\OpenWithProgids"
-						If (Test-Path $OpenWithProgids_Key) 
-							{
-								$Get_OpenWithProgids_Default_Value = (Get-Item $OpenWithProgids_Key).Property
-								ForEach ($Prop in $Get_OpenWithProgids_Default_Value) 
-									{
-										$PS1_Shell_Registry_Key = "$HKCU_Classes\$Prop\Shell"
-										$Main_Menu_Path = "$PS1_Shell_Registry_Key\$PS1_Main_Menu"
-										New-Item -Path $PS1_Shell_Registry_Key -Name $PS1_Main_Menu -Force | Out-Null
-										New-ItemProperty -Path $Main_Menu_Path -Name "subcommands" -PropertyType String | Out-Null
-
-										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Basic" -Entry_Name "PS1 as user"
-										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1System" -Entry_Name "PS1 as system" 
-										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Params" -Entry_Name "PS1 with parameters" 
-									
-									}
-							}
+        if (Test-Path -Path $HKCU_Classes) {
+            $Default_PS1_HKCU = "$HKCU_Classes\.ps1"
+            $OpenWithProgids_Key = "$Default_PS1_HKCU\OpenWithProgids"
+            if (Test-Path -Path $OpenWithProgids_Key) {
+                $Get_OpenWithProgids_Default_Value = (Get-Item -Path $OpenWithProgids_Key).Property
+                ForEach ($Prop in $Get_OpenWithProgids_Default_Value) {
+                    Add-RegItem -Reg_Path "$HKCU_Classes" -Sub_Reg_Path "$Prop" -Type "PS1Basic" -Entry_Name "PS1 as user" -Info_Type "PS1" -MainMenuLabel "Run PS1 in Sandbox" -MainMenuSwitch
+                    Add-RegItem -Reg_Path "$HKCU_Classes" -Sub_Reg_Path "$Prop" -Type "PS1System" -Entry_Name "PS1 as system" -Info_Type "PS1" -MainMenuLabel "Run PS1 in Sandbox" -MainMenuSwitch
+                    Add-RegItem -Reg_Path "$HKCU_Classes" -Sub_Reg_Path "$Prop" -Type "PS1Params" -Entry_Name "PS1 with Parameters" -Info_Type "PS1" -MainMenuLabel "Run PS1 in Sandbox" -MainMenuSwitch
+                }
+                $Registry_Set = $True
+            }
 
             # ADDING CONTEXT MENU DEPENDING OF THE USERCHOICE
             # The userchoice for PS1 is located in: HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.ps1\UserChoice
