@@ -9,7 +9,7 @@ function Restart-ScriptWithAdmin {
 Restart-ScriptWithAdmin
 
 # Define the URL and file paths
-$zipUrl = "https://github.com/Joly0/Run-in-Sandbox/archive/refs/heads/master.zip"
+$zipUrl = "https://github.com/henrikmai/Run-in-Sandbox/archive/refs/heads/master.zip"
 $tempPath = [System.IO.Path]::GetTempPath()
 $zipPath = Join-Path -Path $tempPath -ChildPath "master.zip"
 $extractPath = Join-Path -Path $tempPath -ChildPath "Run-in-Sandbox-master"
