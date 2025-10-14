@@ -143,7 +143,7 @@ if ($Add_PS1 -eq $True) {
     }
     
     if ($Windows_Version -like "*Windows 11*") {
-				Write_Log -Message_Type "INFO" -Message "Running on Windows 11"
+				Write-LogMessage -Message_Type "INFO" -Message "Running on Windows 11"
 				
 				$Default_PS1_HKCU = "$HKCU_Classes\.ps1"
 				If (Test-Path $HKCU_Classes) 
