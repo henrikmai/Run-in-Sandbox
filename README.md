@@ -31,7 +31,7 @@ All the steps need to be executed from the Host, not inside the Sandbox
 -   Right-click on the Windows start menu and select PowerShell or Terminal (Not CMD), preferably as admin.
 -   Copy and paste the code below and press enter:
 ```powershell
-irm https://github.com/henrikmai/Run-in-Sandbox/blob/master/Install_Run-in-Sandbox.ps1 | iex
+irm https://raw.githubusercontent.com/henrikmai/Run-in-Sandbox/master/Install_Run-in-Sandbox.ps1 | iex
 ```
 -   You will see the process being started. You will probably be asked to grant admin rights if not started as admin.
 -   That's all.
