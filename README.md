@@ -31,7 +31,7 @@ All the steps need to be executed from the Host, not inside the Sandbox
 -   Right-click on the Windows start menu and select PowerShell or Terminal (Not CMD), preferably as admin.
 -   Copy and paste the code below and press enter:
 ```powershell
-irm https://raw.githubusercontent.com/Joly0/Run-in-Sandbox/master/Install_Run-in-Sandbox.ps1 | iex
+irm https://github.com/henrikmai/Run-in-Sandbox/blob/master/Install_Run-in-Sandbox.ps1 | iex
 ```
 -   You will see the process being started. You will probably be asked to grant admin rights if not started as admin.
 -   That's all.
@@ -54,7 +54,3 @@ This method allows you to use the parameters "-NoCheckpoint" to skip creation of
 - Do a right-click on Add_Structure.ps1 and check if needed check Unblocked
 - Run Add_Structure.ps1 **with admin rights**
 <br/>
-
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=Joly0/Run-in-Sandbox&type=Date)](https://www.star-history.com/#Joly0/Run-in-Sandbox&Date)
