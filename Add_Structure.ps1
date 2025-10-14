@@ -117,13 +117,13 @@ write-progress -activity $Progress_Activity -percentcomplete 1;
 		
 $Check_Sources_Files_Count = (get-childitem "$Current_Folder\Sources\Run_in_Sandbox" -recurse).count
 
-If($Check_Sources_Files_Count -ne 40) 
-	{
-		Write_Log -Message_Type "ERROR" -Message "Some contents are missing"
-		[System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
-		[System.Windows.Forms.MessageBox]::Show("It seems you haven´t downloaded all the folder structure !!!")
-		break
-	}				
+#If($Check_Sources_Files_Count -ne 40) 
+#	{
+#		Write_Log -Message_Type "ERROR" -Message "Some contents are missing"
+#		[System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
+#		[System.Windows.Forms.MessageBox]::Show("It seems you haven´t downloaded all the folder structure !!!")
+#		break
+#	}				
 
 $Sources_Copied = $False
 $Destination_folder = "$env:ProgramData\Run_in_Sandbox"
