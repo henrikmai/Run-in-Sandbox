@@ -160,9 +160,9 @@ if ($Add_PS1 -eq $True) {
 										New-ItemProperty -Path $Main_Menu_Path -Name "subcommands" -PropertyType String | Out-Null
 										New-Item -Path $Main_Menu_Path -Name "Shell" -Force | Out-Null
 
-										Add-RegKeys -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Basic" -Entry_Name "PS1 as user"
-										Add-RegKeys -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1System" -Entry_Name "PS1 as system" 
-										Add-RegKeys -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Params" -Entry_Name "PS1 with parameters"
+										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Basic" -Entry_Name "PS1 as user"
+										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1System" -Entry_Name "PS1 as system" 
+										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Params" -Entry_Name "PS1 with parameters"
 									}
 							}
 						$OpenWithProgids_Key = "$Default_PS1_HKCU\OpenWithProgids"
@@ -176,9 +176,9 @@ if ($Add_PS1 -eq $True) {
 										New-Item -Path $PS1_Shell_Registry_Key -Name $PS1_Main_Menu -Force | Out-Null
 										New-ItemProperty -Path $Main_Menu_Path -Name "subcommands" -PropertyType String | Out-Null
 
-										Add-RegKeys -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Basic" -Entry_Name "PS1 as user"
-										Add-RegKeys -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1System" -Entry_Name "PS1 as system" 
-										Add-RegKeys -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Params" -Entry_Name "PS1 with parameters" 
+										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Basic" -Entry_Name "PS1 as user"
+										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1System" -Entry_Name "PS1 as system" 
+										Add-RegItem -Reg_Path "$PS1_Shell_Registry_Key" -Sub_Reg_Path "$PS1_Main_Menu" -Type "PS1Params" -Entry_Name "PS1 with parameters" 
 									
 									}
 							}
