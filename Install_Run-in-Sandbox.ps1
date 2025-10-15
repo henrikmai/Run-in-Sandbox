@@ -1,3 +1,12 @@
+# TLS 1.2 aktivieren, falls noch nicht gesetzt
+if ([Net.ServicePointManager]::SecurityProtocol -ne [Net.SecurityProtocolType]::Tls12) {
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Write-Host "TLS 1.2 wurde als Sicherheitsprotokoll gesetzt."
+} else {
+    Write-Host "TLS 1.2 ist aktiviert :)"
+}
+
+
 # Function to restart the script with admin rights
 function Restart-ScriptWithAdmin {
     if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {

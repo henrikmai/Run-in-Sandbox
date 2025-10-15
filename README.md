@@ -3,6 +3,7 @@
 
 #### Original Author & creator: Damien VAN ROBAEYS
 #### Rewritten and maintained now by: Joly0
+#### Re-Rewritten and maintained by: Henrik Mai
 
 This allows you to do the below things in Windows Sandbox **just from a right-click** by adding context menus:
 - Run PS1 as user or system in Sandbox
@@ -34,6 +35,7 @@ All the steps need to be executed from the Host, not inside the Sandbox
 irm https://raw.githubusercontent.com/henrikmai/Run-in-Sandbox/master/Install_Run-in-Sandbox.ps1 | iex
 ```
 -   You will see the process being started. You will probably be asked to grant admin rights if not started as admin.
+-   If the requirements are not met, they will be installed if desired and the system will be restarted. 
 -   That's all.
 
 Note - On older Windows builds you may need to run the below command first: \
