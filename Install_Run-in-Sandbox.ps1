@@ -3,7 +3,7 @@ if ([Net.ServicePointManager]::SecurityProtocol -ne [Net.SecurityProtocolType]::
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Write-Host "TLS 1.2 wurde als Sicherheitsprotokoll gesetzt."
 } else {
-    Write-Host "TLS 1.2 ist aktiviert (:" -ForegroundColor Green
+    Write-Host "TLS 1.2 ist aktiviert (:`n" -ForegroundColor Green
 }
 
 # Function to restart the script with admin rights
@@ -14,7 +14,7 @@ function Restart-ScriptWithAdmin {
         #Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -NoExit -File 'C:\temp\PreInstallCheck.ps1'" -Verb RunA
         exit
     } else {
-    Write-Host "Skript als Admin gestartet (:" -ForegroundColor Green
+    Write-Host "Skript als Admin gestartet (:`n" -ForegroundColor Green
     }
 }
 
@@ -23,7 +23,7 @@ Restart-ScriptWithAdmin
 
 # Funktion zur Prüfung der Voraussetzungen
 function CheckPrerequisites {
-    Write-Host "Check System requirements..."
+    Write-Host "Check System requirements...`n"
 
     # RAM prüfen
     $ramGB = [math]::Round((Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 2)
