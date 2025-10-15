@@ -54,6 +54,7 @@ function CheckPrerequisites {
             Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -NoRestart -All
             Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -NoRestart -All
             Write-Host "Features wurden aktiviert. Der PC wird jetzt neu gestartet..."
+            Pause
             Restart-Computer
             Write-Host "Bitte führen Sie das Skript nach dem Neustart erneut aus." -ForegroundColor Magenta
             Start-Sleep 6
