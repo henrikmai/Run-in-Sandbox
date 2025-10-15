@@ -6,6 +6,21 @@ if ([Net.ServicePointManager]::SecurityProtocol -ne [Net.SecurityProtocolType]::
     Write-Host "TLS 1.2 ist aktiviert (:" -ForegroundColor Green
 }
 
+# Function to restart the script with admin rights
+function Restart-ScriptWithAdmin {
+    if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        Write-Host "Skript ohne Admin-Rechte gestartet, starte neu mit Admin-Rechten!" -ForegroundColor Yellow
+        #Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -NoExit -Command `"(Invoke-webrequest -URI `"C:\temp\PreInstallCheck.ps1`").Content | Invoke-Expression`"" -Verb RunAs
+        Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -NoExit -File 'C:\temp\PreInstallCheck.ps1'" -Verb RunA
+        exit
+    } else {
+    Write-Host "Skript als Admin gestartet (:" -ForegroundColor Green
+    }
+}
+
+# Restart the script with admin rights if not already running as admin
+Restart-ScriptWithAdmin
+
 # Funktion zur Prüfung der Voraussetzungen
 function CheckPrerequisites {
     Write-Host "Check System requirements..."
