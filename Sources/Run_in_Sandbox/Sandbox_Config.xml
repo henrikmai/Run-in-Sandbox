@@ -9,7 +9,7 @@
 	<ProtectedClient>Default</ProtectedClient> <!-- Enable, disable or Default. Places increased security settings on the RDP session to the sandbox. -->
 	<PrinterRedirection>Default</PrinterRedirection> <!-- Enable, disable or Default. Shares printers from the host into the sandbox. -->
 	<ClipboardRedirection>Default</ClipboardRedirection> <!-- Enable, disable or Default. Shares the host clipboard with the sandbox so that text and files can be pasted back and forth. -->
-	<MemoryInMB></MemoryInMB> <!-- The amount of memory, in megabytes, to assign to the sandbox. -->
+	<MemoryInMB>4096</MemoryInMB> <!-- The amount of memory, in megabytes, to assign to the sandbox. -->
 	<ContextMenu_EXE>True</ContextMenu_EXE> <!-- Choose to add or not context menu to run EXE in Sandbox. True or False -->
 	<ContextMenu_MSI>True</ContextMenu_MSI> <!-- Choose to add or not context menu to run MSI in Sandbox. True or False -->
 	<ContextMenu_PS1>True</ContextMenu_PS1> <!-- Choose to add or not context menu to run PS1 in Sandbox. True or False -->

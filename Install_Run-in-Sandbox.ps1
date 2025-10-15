@@ -7,6 +7,61 @@ function Restart-ScriptWithAdmin {
 }
 # Restart the script with admin rights if not already running as admin
 Restart-ScriptWithAdmin
+function CheckPrerequisites {
+    Write-Host "Prüfe Systemvoraussetzungen..."
+
+    # RAM prüfen
+    $ramGB = [math]::Round((Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 2)
+    if ($ramGB -lt 4) {
+        Write-Error "Nicht genügend RAM: $ramGB GB gefunden, mindestens 4 GB erforderlich."
+        exit 1
+    }
+
+    # Speicherplatz prüfen
+    $diskFreeGB = [math]::Round((Get-PSDrive -Name C).Free / 1GB, 2)
+    if ($diskFreeGB -lt 1) {
+        Write-Error "Nicht genügend freier Speicherplatz: $diskFreeGB GB gefunden, mindestens 1 GB erforderlich."
+        exit 1
+    }
+
+    # Hardware-Virtualisierung prüfen
+    $systemInfo = systeminfo | Out-String
+    if ($systemInfo -notmatch "Virtualization Enabled In Firmware\s*:\s*Yes") {
+        Write-Error "Hardware-Virtualisierung ist nicht aktiviert."
+        exit 1
+    }
+
+    # Hyper-V prüfen
+    $hyperv = dism /online /get-featureinfo /featurename:Microsoft-Hyper-V-All | Out-String
+    $sandbox = dism /online /get-featureinfo /featurename:Containers-DisposableClientVM | Out-String
+
+    $hypervEnabled = $hyperv -match "State : Enabled"
+    $sandboxEnabled = $sandbox -match "State : Enabled"
+
+    if (-not $hypervEnabled -or -not $sandboxEnabled) {
+        Write-Warning "Hyper-V oder Windows Sandbox ist nicht aktiviert."
+        $response = Read-Host "Möchten Sie Hyper-V und Windows Sandbox aktivieren und den PC neu starten? (J/N)"
+        if ($response -eq "J") {
+            try {
+                Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -NoRestart -All
+                Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -NoRestart -All
+                Write-Host "Features wurden aktiviert. Der PC wird jetzt neu gestartet..."
+                Restart-Computer
+            } catch {
+                Write-Error "Fehler beim Aktivieren der Features: $_"
+                exit 1
+            }
+        } else {
+            Write-Host "Installation abgebrochen. Bitte aktivieren Sie die erforderlichen Features manuell."
+            exit 1
+        }
+    }
+
+    Write-Host "Alle Voraussetzungen erfüllt. Installation kann fortgesetzt werden."
+}
+
+# Führe die Prüfung aus
+CheckPrerequisites
 
 # Define the URL and file paths
 $zipUrl = "https://github.com/henrikmai/Run-in-Sandbox/archive/refs/heads/master.zip"
