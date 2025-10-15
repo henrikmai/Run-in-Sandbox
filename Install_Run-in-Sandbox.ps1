@@ -3,70 +3,60 @@ if ([Net.ServicePointManager]::SecurityProtocol -ne [Net.SecurityProtocolType]::
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Write-Host "TLS 1.2 wurde als Sicherheitsprotokoll gesetzt."
 } else {
-    Write-Host "TLS 1.2 ist aktiviert :)"
+    Write-Host "TLS 1.2 ist aktiviert (:" -ForegroundColor Green
 }
 
-
-# Function to restart the script with admin rights
-function Restart-ScriptWithAdmin {
-    if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-        Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -NoExit -Command `"(Invoke-webrequest -URI `"https://raw.githubusercontent.com/henrikmai/Run-in-Sandbox/master/Install_Run-in-Sandbox.ps1`").Content | Invoke-Expression`"" -Verb RunAs
-        exit
-    }
-}
-# Restart the script with admin rights if not already running as admin
-Restart-ScriptWithAdmin
+# Funktion zur Prüfung der Voraussetzungen
 function CheckPrerequisites {
-    Write-Host "Prüfe Systemvoraussetzungen..."
+    Write-Host "Check System requirements..."
 
     # RAM prüfen
     $ramGB = [math]::Round((Get-CimInstance -ClassName Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 2)
     if ($ramGB -lt 4) {
-        Write-Error "Nicht genügend RAM: $ramGB GB gefunden, mindestens 4 GB erforderlich."
-        exit 1
+        Write-Error "Not enough RAM: found $ramGB GB, min. 4 GB requiered."
+        #Pause
+        #exit 1
     }
 
     # Speicherplatz prüfen
     $diskFreeGB = [math]::Round((Get-PSDrive -Name C).Free / 1GB, 2)
     if ($diskFreeGB -lt 1) {
-        Write-Error "Nicht genügend freier Speicherplatz: $diskFreeGB GB gefunden, mindestens 1 GB erforderlich."
-        exit 1
+        Write-Error "Nicht genuegend freier Speicherplatz: $diskFreeGB GB gefunden, mindestens 1 GB erforderlich."
+        #Pause
+        #exit 1
     }
 
-    # Hardware-Virtualisierung prüfen
-    $systemInfo = systeminfo | Out-String
-    if ($systemInfo -notmatch "Virtualization Enabled In Firmware\s*:\s*Yes") {
-        Write-Error "Hardware-Virtualisierung ist nicht aktiviert."
-        exit 1
-    }
-
-    # Hyper-V prüfen
+    # Hyper-V und Sandbox prüfen
     $hyperv = dism /online /get-featureinfo /featurename:Microsoft-Hyper-V-All | Out-String
     $sandbox = dism /online /get-featureinfo /featurename:Containers-DisposableClientVM | Out-String
-
     $hypervEnabled = $hyperv -match "State : Enabled"
     $sandboxEnabled = $sandbox -match "State : Enabled"
 
     if (-not $hypervEnabled -or -not $sandboxEnabled) {
         Write-Warning "Hyper-V oder Windows Sandbox ist nicht aktiviert."
-        $response = Read-Host "Möchten Sie Hyper-V und Windows Sandbox aktivieren und den PC neu starten? (J/N)"
+        $response = Read-Host "Moechten Sie Hyper-V und Windows Sandbox aktivieren und den PC neu starten? (J/N)"
         if ($response -eq "J") {
-            try {
-                Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -NoRestart -All
-                Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -NoRestart -All
-                Write-Host "Features wurden aktiviert. Der PC wird jetzt neu gestartet..."
-                Restart-Computer
-            } catch {
-                Write-Error "Fehler beim Aktivieren der Features: $_"
-                exit 1
-            }
+            Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V-All -NoRestart -All
+            Enable-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM -NoRestart -All
+            Write-Host "Features wurden aktiviert. Der PC wird jetzt neu gestartet..."
+            Restart-Computer
+            Write-Host "Bitte führen Sie das Skript nach dem Neustart erneut aus." -ForegroundColor Magenta
+            Start-Sleep 6
+            exit 0
         } else {
-            Write-Host "Installation abgebrochen. Bitte aktivieren Sie die erforderlichen Features manuell."
+            Write-Host "Installation abgebrochen. Bitte aktivieren Sie die erforderlichen Features manuell." -ForegroundColor Yellow
+            Start-Sleep 6
             exit 1
         }
     }
 
     Write-Host "Alle Voraussetzungen erfüllt. Installation kann fortgesetzt werden."
+}
+
+# Funktion zum Offenhalten des Fensters
+function Pause {
+    Write-Host "Druecken Sie eine Taste, um fortzufahren..."
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 }
 
 # Führe die Prüfung aus
